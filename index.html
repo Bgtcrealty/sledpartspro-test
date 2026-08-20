@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b1220">
+<title>SledPartsPro</title>
+<style>
+:root{--bg:#08111f;--card:#101b2d;--card2:#142238;--text:#f6f8fb;--muted:#9eb0c9;--accent:#4fd1c5;--accent2:#71a7ff;--border:#233551;}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#07101c,#0b1627 55%,#07101c);color:var(--text);min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:rgba(8,17,31,.92);backdrop-filter:blur(16px);padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;border-bottom:1px solid var(--border)}
+.brand{font-size:24px;font-weight:800;letter-spacing:-.5px} .brand span{color:var(--accent)} .sub{color:var(--muted);font-size:12px;margin-top:2px}
+main{padding:16px;max-width:900px;margin:0 auto;padding-bottom:100px}
+.hero{background:linear-gradient(145deg,#12233c,#0e192b);border:1px solid var(--border);border-radius:22px;padding:18px;margin-bottom:16px}
+.hero h1{font-size:26px;line-height:1.1;margin:0 0 8px} .hero p{color:var(--muted);margin:0 0 14px;line-height:1.4}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select,input{width:100%;border:1px solid var(--border);background:#0d1829;color:white;border-radius:13px;padding:13px;font-size:16px;outline:none}
+.full{grid-column:1/-1} .chips{display:flex;gap:8px;overflow:auto;padding:4px 0 2px;scrollbar-width:none}
+.chip{white-space:nowrap;border:1px solid var(--border);background:#0f1c30;color:#dbe6f5;padding:9px 12px;border-radius:999px;font-size:13px}
+.chip.active{background:var(--accent);color:#06201d;border-color:var(--accent);font-weight:700}
+.stats{display:flex;gap:9px;margin:14px 0} .stat{flex:1;background:#0c1727;border:1px solid var(--border);border-radius:15px;padding:12px}
+.stat b{display:block;font-size:20px} .stat span{font-size:11px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:18px 2px 10px} .section-title h2{margin:0;font-size:20px} .count{color:var(--muted);font-size:13px}
+.card{display:grid;grid-template-columns:88px 1fr;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:12px;margin-bottom:11px}
+.thumb{height:88px;border-radius:13px;background:linear-gradient(135deg,#1c3152,#0f1d30);display:flex;align-items:center;justify-content:center;font-size:28px}
+.title{font-size:15px;font-weight:700;line-height:1.25;margin-bottom:5px} .meta{font-size:12px;color:var(--muted);line-height:1.45} .price{font-size:21px;font-weight:800;margin:6px 0}
+.actions{display:flex;gap:8px;margin-top:8px} .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:11px;padding:10px 12px;font-weight:700;font-size:13px}
+.buy{background:var(--accent);color:#05201d} .search{background:#1a2a43;color:white;border:1px solid #2b4164}
+.empty{text-align:center;color:var(--muted);padding:40px 12px}
+.notice{font-size:12px;color:var(--muted);line-height:1.45;margin-top:16px;padding:12px;border:1px dashed #2a4166;border-radius:14px}
+.bottom{position:fixed;bottom:0;left:0;right:0;padding:9px 14px calc(env(safe-area-inset-bottom) + 9px);background:rgba(8,17,31,.95);backdrop-filter:blur(14px);border-top:1px solid var(--border)}
+.bottom a{display:block;text-align:center;background:var(--accent2);color:#06152a;text-decoration:none;font-weight:800;border-radius:14px;padding:13px}
+@media(min-width:700px){.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px} .card{margin:0}}
+</style>
+</head>
+<body>
+<header><div class="brand">Sled<span>Parts</span>Pro</div><div class="sub">Find the right Ski-Doo part without digging through eBay</div></header>
+<main>
+<div class="hero">
+<h1>Find parts for your Ski-Doo</h1>
+<p>Choose your sled, then browse categorized eBay inventory with direct purchase links.</p>
+<div class="grid">
+<select id="year"><option value="">All years</option></select>
+<select id="family"><option value="">All model families</option></select>
+<input class="full" id="q" placeholder="Search part, OEM number, model…">
+</div>
+<div class="stats">
+<div class="stat"><b id="resultCount">0</b><span>matching listings</span></div>
+<div class="stat"><b>21</b><span>part categories</span></div>
+<div class="stat"><b>13</b><span>Ski-Doo families</span></div>
+</div>
+<div class="chips" id="chips"></div>
+</div>
+<div class="section-title"><h2>Parts</h2><div class="count" id="filterLabel">All scraped listings</div></div>
+<div class="cards" id="cards"></div>
+<div class="notice"><b>Test catalog:</b> this mobile prototype contains a seeded set of real eBay listings plus the complete Ski-Doo category/model structure. Some seeded records use an eBay search fallback when a stable item URL was not available from public indexing. Production should replace the seed data with the eBay Browse API so prices, availability, photos and direct item URLs stay current automatically.</div>
+</main>
+<div class="bottom"><a id="liveSearch" target="_blank" rel="noopener">Search this setup live on eBay</a></div>
+<script>
+const DATA=[{"year": "2023", "family": "Summit", "model": "Summit X 850", "engine": "850 E-TEC Turbo", "category": "Controls & Gauges", "subcategory": "Switches", "title": "23 SKI DOO Summit X 850 G5 Gen 5 Turbo switches headlight grip warmer OEM #0790", "condition": "Used", "price": 49.99, "shipping": "Free shipping", "url": "https://www.ebay.com/itm/800046688976", "seller": "Idaho Cycle", "item_id": "800046688976"}, {"year": "2023", "family": "Backcountry", "model": "Backcountry X", "engine": "850 E-TEC", "category": "Electrical", "subcategory": "Engine Harness", "title": "2023 SKI DOO GEN 4 850 BACKCOUNTRY X ETEC SUMMIT ENGINE HARNESS", "condition": "Used", "price": 99.0, "shipping": "See listing", "url": "https://www.ebay.com/itm/388455745405", "seller": "Paul's Powersports Parts", "item_id": "388455745405"}, {"year": "2023", "family": "Summit", "model": "Summit X 850", "engine": "850 E-TEC Turbo", "category": "Exhaust", "subcategory": "Exhaust Valve", "title": "23 SKI DOO SUMMIT X 850 G5 GEN 5 TURBO SERVO MOTOR EXHAUST VALVE ACTUATOR #0790", "condition": "Used", "price": 69.99, "shipping": "Free shipping", "url": "https://www.ebay.com/itm/306951762691", "seller": "Idaho Cycle", "item_id": "306951762691"}, {"year": "2004", "family": "MXZ", "model": "MXZ 600 HO SDI", "engine": "600 HO SDI", "category": "Skis & Runners", "subcategory": "Skis", "title": "2004 Ski-Doo MXZ 600 HO SDI skis", "condition": "Used", "price": 199.95, "shipping": "See listing", "url": "https://www.ebay.com/itm/362154680314", "seller": "eBay Seller", "item_id": "362154680314"}, {"year": "2021", "family": "Renegade", "model": "Renegade / MXZ 600", "engine": "600", "category": "Front Suspension", "subcategory": "A-Arms", "title": "2021 Ski-Doo Renegade / MXZ 600 right upper A-arm", "condition": "Used", "price": 89.95, "shipping": "See listing", "url": "https://www.ebay.com/itm/136805737843", "seller": "Max Salvage", "item_id": "136805737843"}, {"year": "2020", "family": "Summit", "model": "Summit 850", "engine": "850 E-TEC", "category": "Engine", "subcategory": "Crankshaft", "title": "2020 Ski-Doo Summit 850 E-TEC crankshaft", "condition": "Used", "price": 399.95, "shipping": "See listing", "url": "https://www.ebay.com/itm/394968907421", "seller": "eBay Seller", "item_id": "394968907421"}, {"year": "2001", "family": "Grand Touring", "model": "Grand Touring 700", "engine": "700", "category": "Controls & Gauges", "subcategory": "Cable", "title": "2001 Ski-Doo Grand Touring 700 clutch cable", "condition": "Used", "price": 29.95, "shipping": "See listing", "url": "https://www.ebay.com/itm/136729631810", "seller": "eBay Seller", "item_id": "136729631810"}, {"year": "1998", "family": "Skandic", "model": "Skandic SWT 500", "engine": "500", "category": "Starting", "subcategory": "Ignition Switch", "title": "Ski-Doo Skandic SWT 500 electric start ignition switch and key 1995-1998", "condition": "New", "price": 19.49, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=Ski-Doo+Skandic+SWT+500+electric+start+ignition+switch+1995+1998", "seller": "Sledpartsguy", "item_id": "search"}, {"year": "1998", "family": "Skandic", "model": "Skandic SWT 500", "engine": "500", "category": "Fuel & Intake", "subcategory": "Air Duct", "title": "Ski-Doo 1998-2003 M5142622 Skandic 500 SWT F/C used OEM air duct", "condition": "Used", "price": 35.99, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=M5142622+Skandic+500+SWT+air+duct", "seller": "eBay Seller", "item_id": "search"}, {"year": "1998", "family": "Skandic", "model": "Skandic SWT", "engine": "500", "category": "Body & Plastics", "subcategory": "Belly Pan", "title": "SKI-DOO SKANDIC 500F 550F 600 SWT WT lower front center belly cover", "condition": "Used", "price": 99.99, "shipping": "See listing", "url": "https://www.ebay.com/sch/i.html?_nkw=SKI-DOO+SKANDIC+500F+550F+600+SWT+WT+belly+cover", "seller": "eBay Seller", "item_id": "search"}, {"year": "2001", "family": "MXZ", "model": "MXZ 700", "engine": "700", "category": "Body & Plastics", "subcategory": "Under-seat Panel", "title": "Ski-doo MXZ 800 2001 OEM under seat panel 572107601", "condition": "Used", "price": 14.99, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=572107601+Ski-doo+MXZ+under+seat+panel", "seller": "eBay Seller", "item_id": "search"}, {"year": "2001", "family": "MXZ", "model": "MXZ 700", "engine": "700", "category": "Body & Plastics", "subcategory": "Dash Panel", "title": "Skidoo MXZ 1999 2000 2001 2002 instrument panel 500 600 700 800", "condition": "Used", "price": 29.99, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=Skidoo+MXZ+1999+2000+2001+2002+instrument+panel", "seller": "eBay Seller", "item_id": "search"}, {"year": "2014", "family": "MXZ", "model": "MXZ X 800R E-TEC", "engine": "800R E-TEC", "category": "Rear Suspension", "subcategory": "Skid", "title": "Skidoo OEM Rear Suspension Skid 503193526 2014 MXZ X 800R Etec Used", "condition": "Used", "price": 249.95, "shipping": "See listing", "url": "https://www.ebay.com/sch/i.html?_nkw=503193526+2014+MXZ+X+800R+Etec+skid", "seller": "eBay Seller", "item_id": "search"}, {"year": "2001", "family": "MXZ", "model": "MXZ 800", "engine": "800", "category": "Fuel & Intake", "subcategory": "Airbox", "title": "2001 Ski Doo MXZ 800 ZX Chassis Air Box Assy w Boots 508000201", "condition": "Used", "price": 25.0, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=508000201+MXZ+800+air+box", "seller": "eBay Seller", "item_id": "search"}, {"year": "2002", "family": "MXZ", "model": "MXZ 800", "engine": "800", "category": "Electrical", "subcategory": "MPEM / ECU", "title": "2002 SKI DOO MXZX MXZ 800 ZX CHASSIS MPEM WITH DPM DESS CALIBRATED MODULE", "condition": "Used", "price": 149.95, "shipping": "Free shipping", "url": "https://www.ebay.com/sch/i.html?_nkw=2002+SKI+DOO+MXZ+800+MPEM+DPM+DESS", "seller": "eBay Seller", "item_id": "search"}, {"year": "2011", "family": "Backcountry", "model": "Backcountry X 600 HO E-TEC", "engine": "600 HO E-TEC", "category": "Front Suspension", "subcategory": "A-Arms", "title": "2011 Ski-Doo Backcountry X 137 600 E-TEC upper A-arm", "condition": "Used", "price": 23.7, "shipping": "See listing", "url": "https://www.ebay.com/itm/306275037494", "seller": "Back Door Parts LLC", "item_id": "306275037494"}, {"year": "2011", "family": "Backcountry", "model": "Backcountry X 600 HO E-TEC", "engine": "600 HO E-TEC", "category": "Rear Suspension", "subcategory": "Rear Shock", "title": "2011 Ski-Doo Backcountry X 600 E-TEC rear shock", "condition": "Used", "price": 449.99, "shipping": "See listing", "url": "https://www.ebay.com/itm/297259046826", "seller": "Back Door Parts LLC", "item_id": "297259046826"}];
+const CATS=["Body & Plastics", "Windshield", "Seat", "Controls & Gauges", "Lighting", "Electrical", "Engine", "Fuel & Intake", "Exhaust", "Clutch & Belt", "Chaincase / Drive", "Track", "Rear Suspension", "Front Suspension", "Steering", "Skis & Runners", "Brakes", "Cooling", "Starting", "Hardware", "Accessories"];
+const FAMILIES=["Backcountry", "Expedition", "Formula", "Freeride", "Grand Touring", "GSX", "Legend", "Mach", "MXZ", "Renegade", "Skandic", "Summit", "Tundra"];
+let activeCat="";
+const $=s=>document.querySelector(s);
+const year=$('#year'),family=$('#family'),q=$('#q'),cards=$('#cards'),chips=$('#chips');
+[...new Set(DATA.map(x=>x.year))].sort((a,b)=>b-a).forEach(y=>year.insertAdjacentHTML('beforeend',`<option>${y}</option>`));
+FAMILIES.forEach(f=>family.insertAdjacentHTML('beforeend',`<option>${f}</option>`));
+chips.innerHTML=`<button class="chip active" data-cat="">All</button>`+CATS.map(c=>`<button class="chip" data-cat="${c}">${c}</button>`).join('');
+chips.addEventListener('click',e=>{if(!e.target.classList.contains('chip'))return;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));e.target.classList.add('active');activeCat=e.target.dataset.cat;render();});
+[year,family,q].forEach(el=>el.addEventListener('input',render));
+function liveUrl(){
+ const parts=['Ski-Doo'];
+ if(year.value)parts.push(year.value);
+ if(family.value)parts.push(family.value);
+ if(q.value.trim())parts.push(q.value.trim());
+ if(activeCat)parts.push(activeCat);
+ return 'https://www.ebay.com/sch/i.html?_nkw='+encodeURIComponent(parts.join(' '));
+}
+function render(){
+ const term=q.value.toLowerCase().trim();
+ const rows=DATA.filter(x=>(!year.value||x.year===year.value)&&(!family.value||x.family===family.value)&&(!activeCat||x.category===activeCat)&&(!term||JSON.stringify(x).toLowerCase().includes(term)));
+ $('#resultCount').textContent=rows.length;
+ $('#filterLabel').textContent=[year.value,family.value,activeCat].filter(Boolean).join(' • ')||'All scraped listings';
+ $('#liveSearch').href=liveUrl();
+ if(!rows.length){cards.innerHTML='<div class="empty">No seeded listing matches this exact filter yet.<br>Use the blue button below to search eBay live.</div>';return;}
+ cards.innerHTML=rows.map(x=>`<article class="card">
+ <div class="thumb">🏁</div><div>
+ <div class="title">${x.title}</div>
+ <div class="meta">${x.year} • ${x.family} • ${x.category} → ${x.subcategory}<br>${x.condition} • ${x.shipping}</div>
+ <div class="price">$${Number(x.price).toFixed(2)}</div>
+ <div class="actions"><a class="btn buy" href="${x.url}" target="_blank" rel="noopener">${x.item_id==='search'?'Find on eBay':'View listing'}</a></div>
+ </div></article>`).join('');
+}
+render();
+</script>
+</body>
+</html>
