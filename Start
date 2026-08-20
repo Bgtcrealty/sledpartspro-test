@@ -1,0 +1,17 @@
+SledPartsPro
+Find the right Ski-Doo part without digging through eBay
+Find parts for your Ski-Doo
+Choose your sled, then browse categorized eBay inventory with direct purchase links.
+All years
+All model families
+
+0
+matching listings
+21
+part categories
+13
+Ski-Doo families
+Parts
+All scraped listings
+Test catalog: this mobile prototype contains a seeded set of real eBay listings plus the complete Ski-Doo category/model structure. Some seeded records use an eBay search fallback when a stable item URL was not available from public indexing. Production should replace the seed data with the eBay Browse API so prices, availability, photos and direct item URLs stay current automatically.
+Search this setup live on eBay
